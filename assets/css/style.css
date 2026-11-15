@@ -151,9 +151,8 @@ button, input, textarea { font: inherit; color: inherit; }
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
-.brand-tile { display: inline-flex; width: 56px; height: 48px; border-radius: 8px; background: var(--ink); overflow: hidden; }
-.brand-tile img { width: 56px; height: 48px; object-fit: contain; }
-.brand-name { font-size: 12px; font-weight: 800; letter-spacing: 0.22em; line-height: 1.25; text-transform: uppercase; }
+.brand-logo { height: 48px; width: auto; display: block; object-fit: contain; }
+.brand-name { font-size: 12px; font-weight: 800; letter-spacing: 0.22em; line-height: 1.25; text-transform: uppercase; color: var(--ink); }
 
 .nav {
   display: flex; align-items: center; justify-content: center; gap: 40px;
@@ -340,8 +339,15 @@ a.svc:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
   position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden;
   background: var(--ink); border: 1px solid rgba(255, 255, 255, 0.12);
 }
-.logo-panel .peek { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 8%; }
-.logo-panel .peek img { width: 100%; }
+.logo-panel-stage {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.logo-panel-stage img {
+  height: 55%; width: auto;
+  display: block; object-fit: contain;
+}
 .panel-label {
   position: absolute; font-size: 12px; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase;
   color: rgba(255, 255, 255, 0.72);
@@ -784,8 +790,8 @@ a.svc:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
 .footer-cta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px; }
 .footer-cta .h2 { font-size: clamp(44px, 7.4vw, 112px); }
 .foot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px; padding-top: 48px; border-top: 1px solid rgba(255, 255, 255, 0.14); }
-.foot-brand { display: flex; flex-direction: column; gap: 18px; }
-.foot-brand img { width: 220px; margin-left: -11px; }
+.foot-brand { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+.foot-brand img { height: 64px; width: auto; display: block; object-fit: contain; margin-left: 0; }
 .foot-brand p { max-width: 280px; font-size: 15px; color: var(--muted-dark); }
 .foot-col { display: flex; flex-direction: column; gap: 14px; font-size: 15px; }
 .foot-col h2 { font-size: 12px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); }
@@ -923,9 +929,8 @@ html.has-sk-cursor [contenteditable] {
   .svc { min-height: 0; }
   .svc h3 { margin-top: 24px; }
   .hero-btns { flex-direction: column; align-items: stretch; width: 100%; }
-  .brand-name { display: none; }
+  .brand-logo { height: 40px; }
   .traits { gap: 12px 14px; letter-spacing: 0.2em; }
-  .foot-brand img { margin-left: -9px; width: 180px; }
 }
 
 /* =========================================================
@@ -961,12 +966,10 @@ html.has-sk-cursor [contenteditable] {
 .motion .reveal { opacity: 0; transform: translateY(56px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
 .motion .wipe { clip-path: polygon(0 0, 0 0, -25% 100%, 0 100%); transition: clip-path 1.1s var(--ease-snap); }
 .motion .draw { transform: scaleX(0); transition: transform 1.4s var(--ease-snap); }
-.motion .peek { transform: translateY(38%); opacity: 0; transition: transform 1.2s var(--ease-out), opacity 0.8s ease; }
 .motion .hl-v::before { transform: rotate(-2deg) scaleX(0); transition: transform 0.6s var(--ease-snap) 0.35s; }
 .motion .reveal.is-in { opacity: 1; transform: none; }
 .motion .wipe.is-in { clip-path: polygon(0 0, 125% 0, 100% 100%, 0 100%); }
 .motion .draw.is-in { transform: scaleX(1); }
-.motion .peek.is-in { transform: none; opacity: 1; }
 .motion .is-in .hl-v::before, .motion .hl-v.is-in::before { transform: rotate(-2deg) scaleX(1); }
 
 @media (prefers-reduced-motion: reduce) {
