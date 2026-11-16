@@ -234,141 +234,21 @@
     targets.forEach(function (el) { el.classList.add('is-in'); });
   }
 
-  /* ---------- Contact form ---------- */
-  var card = document.getElementById('form-card');
-  var form = document.getElementById('brief-form');
-  if (form) {
-    var servicesInput = document.getElementById('f-services');
-    var emailInput = document.getElementById('f-email');
-    var nameInput = document.getElementById('f-name');
-    var emailErr = document.getElementById('f-email-err');
-    var note = document.getElementById('form-note');
-    var successText = document.getElementById('success-text');
-    var chips = form.querySelectorAll('.chip');
-
-    var syncServices = function () {
-      var picked = [];
-      chips.forEach(function (c) {
-        if (c.getAttribute('aria-pressed') === 'true') {
-          picked.push(c.dataset.value);
-        }
-      });
-      if (servicesInput) servicesInput.value = picked.join(', ');
+  /* URL pre-select: ?service=<pillar-slug> */
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var serviceSlug = params.get('service');
+    var slugMap = {
+      'design': 'Web Design',
+      'develop': 'Web Development',
+      'market': 'SEO',
+      'social-content': 'Social Media'
     };
-
-    chips.forEach(function (chip) {
-      chip.addEventListener('click', function () {
-        chip.setAttribute('aria-pressed', chip.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
-        syncServices();
-      });
-    });
-
-    /* URL pre-select: ?service=<pillar-slug> */
-    try {
-      var params = new URLSearchParams(window.location.search);
-      var serviceSlug = params.get('service');
-      var slugMap = {
-        'design': 'Design',
-        'develop': 'Development',
-        'market': 'Marketing & ads',
-        'social-content': 'Social & content'
-      };
-      if (serviceSlug && slugMap[serviceSlug]) {
-        var targetVal = slugMap[serviceSlug];
-        chips.forEach(function (c) {
-          if (c.dataset.value === targetVal) {
-            c.setAttribute('aria-pressed', 'true');
-          }
-        });
-        syncServices();
-      }
-    } catch (e) {}
-
-    var validEmail = function (v) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-    };
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (note) note.textContent = '';
-      var ok = true;
-
-      if (!nameInput.value.trim()) {
-        nameInput.setAttribute('aria-invalid', 'true');
-        ok = false;
-      } else {
-        nameInput.removeAttribute('aria-invalid');
-      }
-
-      if (!validEmail(emailInput.value.trim())) {
-        emailInput.setAttribute('aria-invalid', 'true');
-        if (emailErr) emailErr.hidden = false;
-        ok = false;
-      } else {
-        emailInput.removeAttribute('aria-invalid');
-        if (emailErr) emailErr.hidden = true;
-      }
-
-      if (!ok) {
-        if (note) note.textContent = 'Please add your name and a valid email.';
-        (nameInput.getAttribute('aria-invalid') ? nameInput : emailInput).focus();
-        return;
-      }
-
-      var endpoint = form.dataset.endpoint || 'https://formsubmit.co/ajax/pixelintofficial@gmail.com';
-      var btn = form.querySelector('button[type="submit"]');
-      var originalBtnHtml = btn ? btn.innerHTML : 'Send brief';
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Sending…';
-      }
-
-      var formData = new FormData(form);
-      var payload = {};
-      formData.forEach(function (v, k) {
-        payload[k] = v;
-      });
-
-      fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(function (res) {
-          if (!res.ok) throw new Error('Request failed');
-          if (successText) {
-            successText.textContent = 'Thanks — our team is studying your mission and will get back to you with next steps.';
-          }
-          if (card) card.classList.add('is-sent');
-        })
-        .catch(function () {
-          if (note) {
-            note.textContent = 'Something went wrong sending your brief. Please email us directly at pixelintofficial@gmail.com.';
-            note.style.color = '#e04545';
-          }
-        })
-        .finally(function () {
-          if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = originalBtnHtml;
-          }
-        });
-    });
-
-    var sendAnotherBtn = document.getElementById('send-another');
-    if (sendAnotherBtn) {
-      sendAnotherBtn.addEventListener('click', function () {
-        form.reset();
-        chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
-        syncServices();
-        if (card) card.classList.remove('is-sent');
-        nameInput.focus();
-      });
+    if (serviceSlug && slugMap[serviceSlug]) {
+      var svcSelect = document.getElementById('c-service');
+      if (svcSelect) svcSelect.value = slugMap[serviceSlug];
     }
-  }
+  } catch (e) {}
 
   /* Smooth scroll to #contact for Start a project CTAs */
   document.querySelectorAll('a[href="#contact"]').forEach(function (a) {

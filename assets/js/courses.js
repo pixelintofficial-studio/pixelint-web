@@ -262,7 +262,10 @@
     // 2. Render Enrol Form Course Chips
     if (enrolChipsContainer) {
       enrolChipsContainer.innerHTML = COURSES.map(function (c) {
-        return '<button type="button" class="chip chip-toggle" data-course-id="' + c.id + '" aria-pressed="false">' + c.short + '</button>';
+        return '<label class="field-chip">' +
+          '<input type="radio" name="course" value="' + c.title + '" data-course-id="' + c.id + '" required>' +
+          '<span>' + c.short + '</span>' +
+          '</label>';
       }).join('\n');
     }
 
@@ -378,60 +381,15 @@
       }
     });
 
-    // 4. Enrol Pre-Selection Logic & Form Handling
+    // 4. Enrol Pre-Selection Logic
     function preselectCourse(courseId) {
       if (!courseId) return;
-      var chips = document.querySelectorAll('#course-chips .chip-toggle');
-      chips.forEach(function (chip) {
-        if (chip.dataset.courseId === courseId) {
-          chip.setAttribute('aria-pressed', 'true');
-        }
-      });
-      syncCourseInput();
-    }
-
-    function syncCourseInput() {
-      var picked = [];
-      var chips = document.querySelectorAll('#course-chips .chip-toggle[aria-pressed="true"]');
-      chips.forEach(function (c) {
-        var course = COURSES.find(function (item) { return item.id === c.dataset.courseId; });
-        if (course) picked.push(course.title);
-      });
-      var hidden = document.getElementById('f-enrol-courses');
-      if (hidden) hidden.value = picked.join(', ');
-      var subjectInp = document.getElementById('f-enrol-subject');
-      if (subjectInp) {
-        subjectInp.value = picked.length > 0 ? ('Dojo enrolment — ' + picked.join(', ')) : 'Dojo enrolment';
+      var radio = document.querySelector('input[name="course"][data-course-id="' + courseId + '"]');
+      if (radio) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
       }
-      var err = document.getElementById('f-courses-err');
-      if (err) {
-        if (picked.length > 0) err.hidden = true;
-      }
-      return picked;
     }
-
-    // Toggle Course Chips
-    if (enrolChipsContainer) {
-      enrolChipsContainer.addEventListener('click', function (e) {
-        var chip = e.target.closest('.chip-toggle');
-        if (chip) {
-          var pressed = chip.getAttribute('aria-pressed') === 'true';
-          chip.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-          syncCourseInput();
-        }
-      });
-    }
-
-    // Single-Select "I am a" Chips (Student · Working professional · Business owner)
-    var profileChips = document.querySelectorAll('#profile-chips .chip-radio');
-    profileChips.forEach(function (chip) {
-      chip.addEventListener('click', function () {
-        profileChips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
-        chip.setAttribute('aria-pressed', 'true');
-        var hidden = document.getElementById('f-enrol-profile');
-        if (hidden) hidden.value = chip.dataset.profile || chip.textContent.trim();
-      });
-    });
 
     // Enrol button click handler: scrolls to #enrol and preselects
     document.addEventListener('click', function (e) {
@@ -450,139 +408,6 @@
         switchTab(queryCourse, false);
       }
     } catch (e) {}
-
-    // Form Validation & Submission
-    var enrolForm = document.getElementById('enrol-form');
-    var enrolCard = document.getElementById('enrol-card');
-    if (enrolForm && enrolCard) {
-      var nameInp = document.getElementById('e-name');
-      var phoneInp = document.getElementById('e-phone');
-      var emailInp = document.getElementById('e-email');
-      var coursesErr = document.getElementById('f-courses-err');
-      var nameErr = document.getElementById('e-name-err');
-      var phoneErr = document.getElementById('e-phone-err');
-      var emailErr = document.getElementById('e-email-err');
-      var note = document.getElementById('enrol-note');
-
-      enrolForm.addEventListener('submit', function (ev) {
-        ev.preventDefault();
-        var valid = true;
-        var firstErrorEl = null;
-
-        // Check Course selection (at least 1)
-        var pickedCourses = syncCourseInput();
-        if (pickedCourses.length === 0) {
-          valid = false;
-          if (coursesErr) coursesErr.hidden = false;
-          if (!firstErrorEl) firstErrorEl = enrolChipsContainer;
-        } else {
-          if (coursesErr) coursesErr.hidden = true;
-        }
-
-        // Check Name
-        if (!nameInp.value.trim()) {
-          valid = false;
-          if (nameErr) nameErr.hidden = false;
-          nameInp.classList.add('is-invalid');
-          if (!firstErrorEl) firstErrorEl = nameInp;
-        } else {
-          if (nameErr) nameErr.hidden = true;
-          nameInp.classList.remove('is-invalid');
-        }
-
-        // Check WhatsApp Number
-        var phoneClean = phoneInp.value.replace(/[\s\-\(\)\+]/g, '');
-        if (!phoneClean || phoneClean.length < 8) {
-          valid = false;
-          if (phoneErr) phoneErr.hidden = false;
-          phoneInp.classList.add('is-invalid');
-          if (!firstErrorEl) firstErrorEl = phoneInp;
-        } else {
-          if (phoneErr) phoneErr.hidden = true;
-          phoneInp.classList.remove('is-invalid');
-        }
-
-        // Check Email
-        var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailInp.value.trim() || !emailRe.test(emailInp.value.trim())) {
-          valid = false;
-          if (emailErr) emailErr.hidden = false;
-          emailInp.classList.add('is-invalid');
-          if (!firstErrorEl) firstErrorEl = emailInp;
-        } else {
-          if (emailErr) emailErr.hidden = true;
-          emailInp.classList.remove('is-invalid');
-        }
-
-        if (!valid) {
-          if (firstErrorEl) {
-            firstErrorEl.focus();
-            if (typeof firstErrorEl.scrollIntoView === 'function') {
-              firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-          }
-          return;
-        }
-
-        // Submission
-        var endpoint = enrolForm.getAttribute('data-endpoint') || 'https://formsubmit.co/ajax/pixelintofficial@gmail.com';
-        var submitBtn = enrolForm.querySelector('button[type="submit"]');
-        var originalBtnText = submitBtn ? submitBtn.innerHTML : 'Save my seat →';
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.textContent = 'Sending…';
-        }
-
-        // Prepare JSON payload
-        var formData = new FormData(enrolForm);
-        var payload = {};
-        formData.forEach(function (v, k) {
-          payload[k] = v;
-        });
-
-        fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        })
-          .then(function (res) {
-            if (!res.ok) throw new Error('Submission failed');
-            enrolCard.classList.add('is-success');
-          })
-          .catch(function () {
-            if (note) {
-              note.textContent = 'Something went wrong saving your seat. Please reach out to pixelintofficial@gmail.com or on WhatsApp.';
-              note.style.color = '#e04545';
-            }
-          })
-          .finally(function () {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalBtnText;
-            }
-          });
-      });
-
-      // Start Over button in success state
-      var startOverBtn = document.getElementById('enrol-start-over');
-      if (startOverBtn) {
-        startOverBtn.addEventListener('click', function () {
-          enrolForm.reset();
-          document.querySelectorAll('#course-chips .chip-toggle').forEach(function (c) {
-            c.setAttribute('aria-pressed', 'false');
-          });
-          document.querySelectorAll('#profile-chips .chip-radio').forEach(function (c, idx) {
-            c.setAttribute('aria-pressed', idx === 0 ? 'true' : 'false');
-          });
-          syncCourseInput();
-          enrolCard.classList.remove('is-success');
-          nameInp.focus();
-        });
-      }
-    }
 
     // Notify reveal system about newly injected cards
     if (typeof window.PIXELINT_OBSERVE_TARGETS === 'function') {

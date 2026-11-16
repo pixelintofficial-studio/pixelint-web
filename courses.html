@@ -27,6 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/forms.css">
 
   <!-- Schema.org Course list -->
   <script type="application/ld+json">
@@ -344,70 +345,73 @@
         </div>
 
         <div class="form-card reveal" id="enrol-card">
-          <form class="form" id="enrol-form" data-endpoint="https://formsubmit.co/ajax/pixelintofficial@gmail.com" novalidate>
-            <input type="hidden" name="_subject" id="f-enrol-subject" value="Dojo enrolment">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="text" name="_honey" class="visually-hidden" tabindex="-1" autocomplete="off">
+          <form data-pixelint-form
+                data-subject="Dojo enrolment — {course}"
+                data-success-title="You're on the list."
+                data-success-text="We'll contact you with batch dates and details soon.">
+
             <!-- Course chips -->
-            <fieldset class="field" style="border:none;padding:0;margin:0">
-              <legend class="field-label">Pick your course*</legend>
-              <div class="chips" id="course-chips" role="group" aria-label="Pick your course">
-                <!-- Rendered dynamically by assets/js/courses.js -->
+            <fieldset class="field" data-group data-required id="fs-course">
+              <legend>Choose your track *</legend>
+              <div class="field-chips" id="course-chips">
+                <label class="field-chip">
+                  <input type="radio" name="course" value="Product Design with AI" data-course-id="product-design-ai" required>
+                  <span>Product design with AI</span>
+                </label>
+                <label class="field-chip">
+                  <input type="radio" name="course" value="Full Stack Development" data-course-id="full-stack-dev" required>
+                  <span>Full stack development</span>
+                </label>
+                <label class="field-chip">
+                  <input type="radio" name="course" value="UI/UX Design &amp; Systems" data-course-id="ui-ux-design" required>
+                  <span>UI/UX design &amp; systems</span>
+                </label>
+                <label class="field-chip">
+                  <input type="radio" name="course" value="Growth &amp; Meta Ads" data-course-id="growth-meta-ads" required>
+                  <span>Growth &amp; Meta ads</span>
+                </label>
               </div>
-              <input type="hidden" id="f-enrol-courses" name="courses" required>
-              <span class="field-error" id="f-courses-err" hidden>Please pick at least one course.</span>
             </fieldset>
 
-            <!-- Name -->
-            <div class="field">
-              <label class="field-label" for="e-name">Name*</label>
-              <input id="e-name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
-              <span class="field-error" id="e-name-err" hidden>Please tell us your name.</span>
+            <div class="two">
+              <div class="field">
+                <label for="e-name">Name *</label>
+                <input id="e-name" name="name" type="text" autocomplete="name" required data-validate="name" maxlength="80" placeholder="Your name">
+              </div>
+              <div class="field">
+                <label for="e-email">Email *</label>
+                <input id="e-email" name="email" type="email" autocomplete="email" required placeholder="you@company.com">
+              </div>
             </div>
 
-            <!-- WhatsApp Number -->
             <div class="field">
-              <label class="field-label" for="e-phone">WhatsApp number*</label>
-              <input id="e-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 98765 43210" required>
-              <span class="field-error" id="e-phone-err" hidden>Please provide a valid WhatsApp phone number.</span>
-            </div>
-
-            <!-- Email -->
-            <div class="field">
-              <label class="field-label" for="e-email">Email*</label>
-              <input id="e-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
-              <span class="field-error" id="e-email-err" hidden>Please enter a valid email address.</span>
+              <label for="e-phone">Phone / WhatsApp number *</label>
+              <input id="e-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+91 98765 43210">
             </div>
 
             <!-- Profile Chips ("I am a") -->
-            <fieldset class="field" style="border:none;padding:0;margin:0">
-              <legend class="field-label">I am a</legend>
-              <div class="chips" id="profile-chips" role="radiogroup" aria-label="I am a">
-                <button type="button" class="chip chip-radio" data-profile="Student" aria-pressed="true">Student</button>
-                <button type="button" class="chip chip-radio" data-profile="Working professional" aria-pressed="false">Working professional</button>
-                <button type="button" class="chip chip-radio" data-profile="Business owner" aria-pressed="false">Business owner</button>
+            <fieldset class="field" data-group data-required id="fs-profile">
+              <legend>I am a *</legend>
+              <div class="field-chips" id="profile-chips">
+                <label class="field-chip">
+                  <input type="radio" name="profile" value="Student" required>
+                  <span>Student</span>
+                </label>
+                <label class="field-chip">
+                  <input type="radio" name="profile" value="Working professional" required>
+                  <span>Working professional</span>
+                </label>
+                <label class="field-chip">
+                  <input type="radio" name="profile" value="Business owner" required>
+                  <span>Business owner</span>
+                </label>
               </div>
-              <input type="hidden" id="f-enrol-profile" name="profile" value="Student">
             </fieldset>
 
+            <input class="form-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
             <button class="btn btn-gold" type="submit">Save my seat →</button>
-            <p class="form-note" id="enrol-note">Save your seat for the next batch. We'll message you with schedule and fee details.</p>
+            <p class="form-note">Save your seat for the next batch. We'll message you with schedule and fee details.</p>
           </form>
-
-          <!-- Success State -->
-          <div class="enrol-success-view" id="enrol-success-view">
-            <div class="success-belt">
-              <span>SEAT · SAVED</span>
-              <span class="belt-knot-wrap" aria-hidden="true">
-                <span class="knot-square knot-black"></span>
-                <span class="knot-tails"></span>
-              </span>
-            </div>
-            <h3 class="display" style="font-size: clamp(24px, 3vw, 32px); text-transform: uppercase; margin: 8px 0 0;">WELCOME TO THE DOJO.</h3>
-            <p style="color: var(--text-2); line-height: 1.6; max-width: 360px; margin: 0 auto;">We'll message you on WhatsApp with batch dates and next steps.</p>
-            <button type="button" class="btn btn-ghost" id="enrol-start-over" style="margin-top: 12px;">Start over</button>
-          </div>
         </div>
       </div>
     </section>
@@ -470,5 +474,6 @@
 
   <script src="assets/js/courses.js"></script>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/forms.js" defer></script>
 </body>
 </html>

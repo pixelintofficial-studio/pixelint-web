@@ -27,6 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/forms.css">
 
   <!-- Schema.org Organization + Team Members -->
   <script type="application/ld+json">
@@ -314,11 +315,56 @@
           <h2 class="display h2" id="careers-title">WANT TO JOIN<br>THE <span class="hl hl-v">CLAN?</span></h2>
           <p class="lead">We're always looking for sharp designers, developers and storytellers who move with precision. Show us what you've got.</p>
 
-          <div class="careers-actions">
-            <a class="btn btn-gold" href="mailto:pixelintofficial@gmail.com?subject=Careers%20application%20%E2%80%94%20PIXELINT">Send your portfolio
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-            <a class="careers-email" href="mailto:pixelintofficial@gmail.com?subject=Careers%20application%20%E2%80%94%20PIXELINT">pixelintofficial@gmail.com</a>
+          <div class="form-card" style="width:100%;text-align:left;margin-top:16px;">
+            <form data-pixelint-form
+                  data-subject="Careers application — PIXELINT"
+                  data-success-title="Application received."
+                  data-success-text="Thanks for wanting to join the Clan. We'll review it and get back to you.">
+              <div class="two">
+                <div class="field">
+                  <label for="join-name">Name *</label>
+                  <input id="join-name" name="name" type="text" autocomplete="name" required data-validate="name" maxlength="80" placeholder="Your name">
+                </div>
+                <div class="field">
+                  <label for="join-email">Email *</label>
+                  <input id="join-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+                </div>
+              </div>
+
+              <div class="two">
+                <div class="field">
+                  <label for="join-phone">Phone</label>
+                  <input id="join-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210">
+                </div>
+                <div class="field">
+                  <label for="join-role">Role *</label>
+                  <select id="join-role" name="role" required>
+                    <option value="">Select a discipline…</option>
+                    <option value="Design Ninja (Brand / UI / Visual)">Design Ninja (Brand / UI / Visual)</option>
+                    <option value="Frontend Developer (React / Next / Vue / CSS)">Frontend Developer (React / Next / Vue / CSS)</option>
+                    <option value="Full-stack Developer (Node / Python / APIs)">Full-stack Developer (Node / Python / APIs)</option>
+                    <option value="Growth Ninja (Marketing / Ads / Social)">Growth Ninja (Marketing / Ads / Social)</option>
+                    <option value="Content &amp; Copy Strategist">Content &amp; Copy Strategist</option>
+                    <option value="Other / General">Other / General</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="join-portfolio">Portfolio or GitHub link</label>
+                <input id="join-portfolio" name="portfolio" type="url" placeholder="https://yourportfolio.com">
+              </div>
+
+              <div class="field">
+                <label for="join-msg">Why PIXELINT? *</label>
+                <textarea id="join-msg" name="message" required minlength="20" maxlength="2000" rows="4" placeholder="Tell us about yourself, your proudest project, and what you want to build with the Clan."></textarea>
+              </div>
+
+              <input class="form-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <button type="submit" class="btn btn-gold">Submit application
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -382,5 +428,6 @@
 
   <script src="assets/js/team.js"></script>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/forms.js" defer></script>
 </body>
 </html>

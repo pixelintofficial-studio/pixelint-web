@@ -1,0 +1,380 @@
+/* =========================================================
+   PIXELINT — Forms System
+   Validation, Sending & Success States
+   ========================================================= */
+
+/* Honeypot spam trap (never visible, never focusable) */
+.form-honey {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  clip: rect(0 0 0 0) !important;
+}
+
+/* Form container adjustments */
+form[data-pixelint-form] {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: relative;
+  width: 100%;
+}
+
+/* Fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  width: 100%;
+}
+
+.field label,
+.field legend {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+/* Controls */
+.field input:not([type="checkbox"]):not([type="radio"]),
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 16px;
+  border: 1.5px solid #C4C6D2;
+  border-radius: var(--radius);
+  background: var(--white);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.field textarea {
+  padding: 14px 16px;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 140px;
+}
+
+.field select {
+  padding-right: 42px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B0C14' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px 16px;
+}
+
+/* Hover & Focus */
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--text-3);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--ink);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(232, 176, 75, 0.55);
+}
+
+/* Error States */
+.field.has-error input:not([type="checkbox"]):not([type="radio"]),
+.field.has-error select,
+.field.has-error textarea,
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"],
+.field textarea[aria-invalid="true"] {
+  border-color: #D9383A !important;
+  background-color: rgba(217, 56, 58, 0.02);
+}
+
+.field.has-error input:focus,
+.field.has-error select:focus,
+.field.has-error textarea:focus {
+  box-shadow: 0 0 0 3px rgba(217, 56, 58, 0.25) !important;
+}
+
+.field-error {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #D9383A;
+  margin-top: 2px;
+  animation: fieldErrFade 0.2s ease-out;
+}
+
+@keyframes fieldErrFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fieldset Groups (Choice chips / radios) */
+fieldset.field[data-group] {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+fieldset.field[data-group] legend {
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.field-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.field-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1.5px solid #C4C6D2;
+  background: var(--white);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.field-chip input[type="radio"],
+.field-chip input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.field-chip:hover {
+  border-color: var(--ink);
+}
+
+.field-chip:has(input:checked),
+.field-chip.is-checked {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.field-chip:has(input:focus-visible) {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+fieldset.field.has-error .field-chips {
+  border-radius: 8px;
+  padding: 4px;
+  outline: 1.5px dashed rgba(217, 56, 58, 0.6);
+}
+
+/* Form Top Alert Banner */
+.form-alert {
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  background: rgba(217, 56, 58, 0.08);
+  border: 1.5px solid rgba(217, 56, 58, 0.35);
+  color: #B42318;
+  animation: fieldErrFade 0.25s ease-out;
+}
+
+.form-alert a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Submit Button & Sending State */
+form[data-pixelint-form] button[type="submit"].is-sending,
+form[data-pixelint-form] button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Form Success View (Swapped into place) */
+.form-success-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding: clamp(28px, 4vw, 56px) 16px;
+  animation: formSuccessPop 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes formSuccessPop {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-success-panel .tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  background: var(--gold);
+  color: var(--ink);
+  box-shadow: 0 4px 16px rgba(232, 176, 75, 0.35);
+}
+
+.form-success-panel h3 {
+  font-size: clamp(36px, 4.4vw, 56px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: var(--display-track, -0.03em);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.form-success-panel p {
+  max-width: 440px;
+  color: var(--text-2);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.form-success-panel .btn-ghost {
+  min-height: 52px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  margin-top: 8px;
+}
+
+/* Form Failure State */
+.form-error-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 24px;
+  background: rgba(217, 56, 58, 0.08);
+  border: 1.5px solid rgba(217, 56, 58, 0.4);
+  border-radius: var(--radius);
+  color: #B42318;
+}
+
+.form-error-panel a {
+  color: #B42318;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Dark Section Adaptations (.on-dark or .bg-ink or .bg-ink-dots) */
+.on-dark .field label,
+.on-dark .field legend,
+.bg-ink .field label,
+.bg-ink .field legend,
+.bg-ink-dots .field label,
+.bg-ink-dots .field legend {
+  color: var(--white);
+}
+
+.on-dark .field input:not([type="checkbox"]):not([type="radio"]),
+.on-dark .field select,
+.on-dark .field textarea,
+.bg-ink .field input:not([type="checkbox"]):not([type="radio"]),
+.bg-ink .field select,
+.bg-ink .field textarea,
+.bg-ink-dots .field input:not([type="checkbox"]):not([type="radio"]),
+.bg-ink-dots .field select,
+.bg-ink-dots .field textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+}
+
+.on-dark .field input:focus,
+.on-dark .field select:focus,
+.on-dark .field textarea:focus,
+.bg-ink .field input:focus,
+.bg-ink .field select:focus,
+.bg-ink .field textarea:focus,
+.bg-ink-dots .field input:focus,
+.bg-ink-dots .field select:focus,
+.bg-ink-dots .field textarea:focus {
+  border-color: var(--gold);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.on-dark .field.has-error input:not([type="checkbox"]):not([type="radio"]),
+.on-dark .field.has-error select,
+.on-dark .field.has-error textarea,
+.on-dark .field input[aria-invalid="true"],
+.bg-ink .field.has-error input:not([type="checkbox"]):not([type="radio"]),
+.bg-ink .field.has-error select,
+.bg-ink .field.has-error textarea,
+.bg-ink .field input[aria-invalid="true"],
+.bg-ink-dots .field.has-error input:not([type="checkbox"]):not([type="radio"]),
+.bg-ink-dots .field.has-error select,
+.bg-ink-dots .field.has-error textarea,
+.bg-ink-dots .field input[aria-invalid="true"] {
+  border-color: #FF6B6B !important;
+  background: rgba(255, 107, 107, 0.1) !important;
+}
+
+.on-dark .field-error,
+.bg-ink .field-error,
+.bg-ink-dots .field-error {
+  color: #FFA7A7;
+}
+
+.on-dark .field-chip,
+.bg-ink .field-chip,
+.bg-ink-dots .field-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+}
+
+.on-dark .field-chip:hover,
+.bg-ink .field-chip:hover,
+.bg-ink-dots .field-chip:hover {
+  border-color: var(--gold);
+}
+
+.on-dark .field-chip:has(input:checked),
+.on-dark .field-chip.is-checked,
+.bg-ink .field-chip:has(input:checked),
+.bg-ink .field-chip.is-checked,
+.bg-ink-dots .field-chip:has(input:checked),
+.bg-ink-dots .field-chip.is-checked {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+}
