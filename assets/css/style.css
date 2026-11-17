@@ -2897,3 +2897,153 @@ html:not(.motion) .stat-label {
     clip-path: none !important;
   }
 }
+
+/* =========================================================
+   LOGO RUN & THROW
+   ========================================================= */
+/* ===== LOGO RUN & THROW — the ninja sprints across the π, throws a kunai at the viewer,
+         vanishes in a puff of gold pixels and reappears at the start ===== */
+.nr-logo { display: block; width: min(332px, 70%); height: auto; overflow: visible; --nr: 6.4s; }
+.nr-logo * { transform-box: view-box; }
+.nr-logo .nr-speed line, .nr-logo .nr-dust rect, .nr-logo .nr-poof rect { transform-box: fill-box; transform-origin: center; }
+
+/* Off-screen pause control */
+.logo-panel.is-paused .nr-logo * { animation-play-state: paused; }
+
+/* static by default (reduced motion = the plain logo) */
+.nr-logo .nr-speed, .nr-logo .nr-dust, .nr-logo .nr-poof, .nr-logo .nr-knife, .nr-logo .nr-ring { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .nr-logo .nr-face  { transform: scaleX(-1); transform-origin: 155px 0; }   /* face right = direction of travel */
+  .nr-logo .nr-track { animation: nrTrack var(--nr) linear infinite; }
+  .nr-logo .nr-body  { transform-origin: 155px 100px; animation: nrBody var(--nr) linear infinite; }
+  .nr-logo .nr-speed { animation: nrRunOnly var(--nr) linear infinite; }
+  .nr-logo .nr-dust  { animation: nrRunOnly var(--nr) linear infinite; }
+  .nr-logo .nr-speed line { animation: nrStreak .55s linear infinite; }
+  .nr-logo .nr-speed line:nth-child(2) { animation-delay: -.2s; }
+  .nr-logo .nr-speed line:nth-child(3) { animation-delay: -.38s; }
+  .nr-logo .nr-dust rect { animation: nrDust .36s ease-out infinite; }
+  .nr-logo .nr-dust rect:nth-child(2) { animation-delay: -.12s; }
+  .nr-logo .nr-dust rect:nth-child(3) { animation-delay: -.24s; }
+  .nr-logo .nr-knife { transform-origin: 0 0; animation: nrKnife var(--nr) linear infinite; }
+  .nr-logo .nr-ring  { transform-origin: 155px 175px; animation: nrRing var(--nr) ease-out infinite; }
+  .nr-logo .nr-poof.in  { animation: nrPoofIn var(--nr) linear infinite; }
+  .nr-logo .nr-poof.out { animation: nrPoofOut var(--nr) linear infinite; }
+}
+
+/* whole ninja: appear at the left end, sprint right, hold, vanish, jump back unseen */
+@keyframes nrTrack {
+  0%      { transform: translateX(-62px); opacity: 0; }
+  3%      { transform: translateX(-62px); opacity: 1; }
+  8%      { transform: translateX(-62px); animation-timing-function: cubic-bezier(.4,0,.6,1); }
+  44%     { transform: translateX(74px); }
+  48%     { transform: translateX(80px); }
+  74%     { transform: translateX(80px); opacity: 1; }
+  76%     { transform: translateX(80px); opacity: 0; }
+  77%     { transform: translateX(-62px); opacity: 0; }
+  100%    { transform: translateX(-62px); opacity: 0; }
+}
+
+@keyframes nrBody {
+  0.00% { transform: translateY(0px) rotate(0deg) scale(0.6,0.6); }
+  3.00% { transform: translateY(0px) rotate(0deg) scale(1.06,0.92); }
+  6.00% { transform: translateY(0px) rotate(-2deg) scale(1,1); }
+  8.00% { transform: translateY(0px) rotate(2deg) scale(1.05,0.93); }
+  10.60% { transform: translateY(-11px) rotate(6deg) scale(0.98,1.05); }
+  13.00% { transform: translateY(-1px) rotate(3deg) scale(1.03,0.96); }
+  14.00% { transform: translateY(0px) rotate(2deg) scale(1.05,0.93); }
+  16.60% { transform: translateY(-11px) rotate(6deg) scale(0.98,1.05); }
+  19.00% { transform: translateY(-1px) rotate(3deg) scale(1.03,0.96); }
+  20.00% { transform: translateY(0px) rotate(2deg) scale(1.05,0.93); }
+  22.60% { transform: translateY(-11px) rotate(6deg) scale(0.98,1.05); }
+  25.00% { transform: translateY(-1px) rotate(3deg) scale(1.03,0.96); }
+  26.00% { transform: translateY(0px) rotate(2deg) scale(1.05,0.93); }
+  28.60% { transform: translateY(-11px) rotate(6deg) scale(0.98,1.05); }
+  31.00% { transform: translateY(-1px) rotate(3deg) scale(1.03,0.96); }
+  32.00% { transform: translateY(0px) rotate(2deg) scale(1.05,0.93); }
+  34.60% { transform: translateY(-11px) rotate(6deg) scale(0.98,1.05); }
+  37.00% { transform: translateY(-1px) rotate(3deg) scale(1.03,0.96); }
+  38.00% { transform: translateY(0px) rotate(2deg) scale(1.05,0.93); }
+  40.60% { transform: translateY(-11px) rotate(6deg) scale(0.98,1.05); }
+  43.00% { transform: translateY(-1px) rotate(3deg) scale(1.03,0.96); }
+  44.00% { transform: translateY(0px) rotate(-7deg) scale(1.07,0.92); }
+  48.00% { transform: translateY(-1px) rotate(-6deg) scale(1.02,0.98); }
+  53.00% { transform: translateY(-3px) rotate(-13deg) scale(1,1.02); }
+  55.00% { transform: translateY(0px) rotate(12deg) scale(1.06,0.93); }
+  59.00% { transform: translateY(0px) rotate(3deg) scale(1,1); }
+  72.00% { transform: translateY(0px) rotate(0deg) scale(1,1); }
+  75.00% { transform: translateY(-4px) rotate(0deg) scale(0.6,0.6); }
+  100.00% { transform: translateY(0px) rotate(0deg) scale(0.6,0.6); }
+}
+
+/* speed lines + dust only while sprinting */
+@keyframes nrRunOnly {
+  0%, 7% { opacity: 0; }  10%, 43% { opacity: 1; }  45%, 100% { opacity: 0; }
+}
+@keyframes nrStreak {
+  0%   { transform: translateX(0) scaleX(.4); opacity: 0; }
+  25%  { opacity: .85; }
+  100% { transform: translateX(-28px) scaleX(1); opacity: 0; }
+}
+@keyframes nrDust {
+  0%, 55% { transform: translate(0,0) scale(1); opacity: 0; }
+  62%     { opacity: 1; }
+  100%    { transform: translate(-22px,-14px) scale(.3) rotate(45deg); opacity: 0; }
+}
+
+/* the kunai: leaves the hand, spins toward the viewer, fills the frame and is gone */
+@keyframes nrKnife {
+  0%, 54.5% { transform: translate(262px, 44px) rotate(-20deg) scale(.5); opacity: 0; }
+  55%        { transform: translate(262px, 44px) rotate(-20deg) scale(.6); opacity: 1; }
+  59%        { transform: translate(215px, 100px) rotate(150deg) scale(2.6); opacity: 1; }
+  63%        { transform: translate(160px, 172px) rotate(330deg) scale(8); opacity: 1; }
+  64.5%      { transform: translate(155px, 178px) rotate(360deg) scale(12); opacity: 0; }
+  100%       { transform: translate(155px, 178px) rotate(360deg) scale(12); opacity: 0; }
+}
+/* a gold ring flashes where it "hits" the screen */
+@keyframes nrRing {
+  0%, 62.5% { transform: scale(.2); opacity: 0; }
+  63%        { transform: scale(.4); opacity: 1; }
+  68%       { transform: scale(2.2); opacity: 0; }
+  100%       { transform: scale(2.2); opacity: 0; }
+}
+
+/* puffs of gold pixels: reappear (left) and vanish (right) */
+@keyframes nrPoofIn  { 0% { opacity: 1; } 6% { opacity: 1; } 8%, 100% { opacity: 0; } }
+@keyframes nrPoofOut { 0%, 74% { opacity: 0; } 75% { opacity: 1; } 81% { opacity: 1; } 83%, 100% { opacity: 0; } }
+
+@keyframes nrPin0 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(31.9px,9.6px) scale(.2) rotate(90deg); } 100% { transform: translate(31.9px,9.6px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p0 { animation: nrPin0 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPin1 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(14.4px,25.4px) scale(.2) rotate(90deg); } 100% { transform: translate(14.4px,25.4px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p1 { animation: nrPin1 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPin2 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(-11.6px,26.3px) scale(.2) rotate(90deg); } 100% { transform: translate(-11.6px,26.3px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p2 { animation: nrPin2 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPin3 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(-30.8px,11.8px) scale(.2) rotate(90deg); } 100% { transform: translate(-30.8px,11.8px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p3 { animation: nrPin3 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPin4 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(-31.9px,-9.6px) scale(.2) rotate(90deg); } 100% { transform: translate(-31.9px,-9.6px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p4 { animation: nrPin4 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPin5 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(-14.4px,-25.4px) scale(.2) rotate(90deg); } 100% { transform: translate(-14.4px,-25.4px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p5 { animation: nrPin5 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPin6 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(11.6px,-26.3px) scale(.2) rotate(90deg); } 100% { transform: translate(11.6px,-26.3px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p6 { animation: nrPin6 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPin7 { 0% { transform: translate(0,0) scale(1.2); } 6.0% { transform: translate(30.8px,-11.8px) scale(.2) rotate(90deg); } 100% { transform: translate(30.8px,-11.8px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.in .p7 { animation: nrPin7 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout0 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(31.9px,9.6px) scale(.2) rotate(90deg); } 100% { transform: translate(31.9px,9.6px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p0 { animation: nrPout0 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout1 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(14.4px,25.4px) scale(.2) rotate(90deg); } 100% { transform: translate(14.4px,25.4px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p1 { animation: nrPout1 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout2 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(-11.6px,26.3px) scale(.2) rotate(90deg); } 100% { transform: translate(-11.6px,26.3px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p2 { animation: nrPout2 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout3 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(-30.8px,11.8px) scale(.2) rotate(90deg); } 100% { transform: translate(-30.8px,11.8px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p3 { animation: nrPout3 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout4 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(-31.9px,-9.6px) scale(.2) rotate(90deg); } 100% { transform: translate(-31.9px,-9.6px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p4 { animation: nrPout4 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout5 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(-14.4px,-25.4px) scale(.2) rotate(90deg); } 100% { transform: translate(-14.4px,-25.4px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p5 { animation: nrPout5 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout6 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(11.6px,-26.3px) scale(.2) rotate(90deg); } 100% { transform: translate(11.6px,-26.3px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p6 { animation: nrPout6 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+@keyframes nrPout7 { 0%, 75% { transform: translate(0,0) scale(1.2); } 81% { transform: translate(30.8px,-11.8px) scale(.2) rotate(90deg); } 100% { transform: translate(30.8px,-11.8px) scale(.2) rotate(90deg); } }
+@media (prefers-reduced-motion: no-preference) { .nr-logo .nr-poof.out .p7 { animation: nrPout7 var(--nr) cubic-bezier(.2,.8,.2,1) infinite; } }
+
+/* sprint faster on hover */
+.logo-panel:hover .nr-logo { --nr: 5s; }

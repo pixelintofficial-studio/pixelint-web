@@ -269,6 +269,52 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =========================================================
+     LOGO RUN & THROW (#studio .logo-panel)
+     ========================================================= */
+  var logoPanel = document.querySelector('.logo-panel');
+  if (logoPanel) {
+    var nrLogo = logoPanel.querySelector('.nr-logo');
+    if (nrLogo) {
+      logoPanel.classList.add('is-paused');
+
+      var restartLogoAnimation = function () {
+        var hasReset = false;
+        if (typeof nrLogo.getAnimations === 'function') {
+          var anims = nrLogo.getAnimations({ subtree: true });
+          if (anims && anims.length > 0) {
+            anims.forEach(function (anim) {
+              try { anim.currentTime = 0; } catch (err) {}
+            });
+            hasReset = true;
+          }
+        }
+        if (!hasReset) {
+          nrLogo.classList.remove('nr-logo');
+          void nrLogo.offsetWidth;
+          nrLogo.classList.add('nr-logo');
+        }
+      };
+
+      if ('IntersectionObserver' in window) {
+        var logoObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              restartLogoAnimation();
+              logoPanel.classList.remove('is-paused');
+            } else {
+              logoPanel.classList.add('is-paused');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        logoObserver.observe(logoPanel);
+      } else {
+        logoPanel.classList.remove('is-paused');
+      }
+    }
+  }
+
+  /* =========================================================
      SHURIKEN SPARKS (HERO SPAWNER)
      ========================================================= */
   function initShurikenField() {
